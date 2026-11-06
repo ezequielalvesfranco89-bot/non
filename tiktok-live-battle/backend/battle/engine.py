@@ -14,6 +14,7 @@ class Engine:
         settings = validate_settings(store.get('settings', Settings().model_dump()))
         self.data = store.get('state') or self._fresh('test', settings)
         self.data['settings'] = settings
+        self._v2_defaults()
         # A restart never silently runs a battle while the broadcaster is absent.
         if self.data['battle']['status'] in ('running', 'victory'):
             self.data['battle']['status'] = 'paused'
@@ -26,12 +27,19 @@ class Engine:
     def _boss(self, level, settings):
         name, kind = BOSSES[(level - 1) % len(BOSSES)]
         name = settings['boss_names'].get(kind,name)
-        hp = min(100_000_000, round(settings['monster_hp'] * settings['difficulty_multiplier'] ** min(level - 1, 30)))
+        hp = min(100_000_000, round(settings['monster_hp'] * min(3.0, settings['difficulty_multiplier'] ** min(level - 1, 30))))
         return dict(name=name, kind=kind, hp=hp, max_hp=hp)
 
     def _fresh(self, mode, settings):
         return dict(mode=mode, settings=settings, battle=dict(status='idle', level=1, boss=self._boss(1, settings), team_hp=100, team_max_hp=100, bosses_defeated=0, total_damage=0, combo=0, power_until=0),
                     session=dict(id=str(uuid.uuid4()), followers=0, gifts=0, likes=0, comments=0, participants=0), events=[], participants={}, ranking={}, known_gifts=[], pending=[], last_attack=self.clock(), last_combo=0, next_at=0, round_damage=0, next_special=self.clock()+30)
+
+    def _v2_defaults(self):
+        b=self.data['battle']
+        for k,v in dict(like_power=0,power_charges=0,defense_until=0,shield=0,scene_bonus=False).items():b.setdefault(k,v)
+        self.data.setdefault('cooldowns',{})
+        self.data.setdefault('round_started',self.clock())
+        self.data.setdefault('participation',{})
 
     @contextmanager
     def _transaction(self):
@@ -64,12 +72,15 @@ class Engine:
         result['battle']['pending_actions'] = len(self.data['pending'])
         result['ranking'] = sorted(copy.deepcopy(list(self.data['ranking'].values())), key=lambda r:r['damage'], reverse=True)[:5]
         result['history'] = self.store.history()
+        counts=self.data['session']
+        result['metrics']={'unique_participants':counts['participants'],'free_interactions':counts['followers']+counts['likes']+counts['comments'],'gift_units':counts['gifts'],'participation':copy.deepcopy(self.data['participation']),'retention':None,'average_watch_time':None,'note':'Retenção e tempo de visualização indisponíveis; não são inferidos de curtidas.'}
         return result
 
     def set_mode(self, mode):
         if mode not in ('test', 'live'): raise ValueError('Modo inválido')
         with self._transaction():
             self.data = self._fresh(mode, self.data['settings'])
+            self._v2_defaults()
             self.store.clear_session_rows(self.data['session']['id'])
             self._log('Nova sessão de teste.' if mode == 'test' else 'Nova sessão LIVE. Aguardando conexão real.')
 
@@ -77,6 +88,7 @@ class Engine:
         validated = validate_settings(settings)
         with self._transaction():
             self.data['settings'] = validated
+            self.data['next_special']=self.clock()+validated['special_interval']
             if self.data['battle']['status'] == 'idle': self.data['battle']['boss'] = self._boss(self.data['battle']['level'], validated)
             self._log('Configurações salvas. Vida e dificuldade aplicadas ao próximo chefe.')
 
@@ -85,6 +97,7 @@ class Engine:
         with self._transaction():
             b = self.data['battle']
             if action == 'start':
+                if b['status'] in ('idle','defeat'):self.data['round_started']=self.clock()
                 if b['boss']['hp'] <= 0:
                     self._next_level()
                 if b['status'] == 'defeat':
@@ -98,7 +111,7 @@ class Engine:
                 b['status'] = 'paused'
             elif action == 'reset':
                 # Reset round does not reset event identity, rewards, or session counters.
-                b.update(status='idle', level=1, boss=self._boss(1,self.data['settings']), team_hp=100, combo=0, power_until=0)
+                b.update(status='idle', shield=0, defense_until=0, level=1, boss=self._boss(1,self.data['settings']), team_hp=100, combo=0, power_until=0)
                 self.data['pending'] = []
                 self.data['round_damage'] = 0
             elif action in ('next','boss'):
@@ -117,6 +130,8 @@ class Engine:
         b.update(status='running', boss=self._boss(b['level'], self.data['settings']), team_hp=min(100,b['team_hp']+15), combo=0)
         self.data['last_attack'] = self.clock()
         self.data['round_damage'] = 0
+        self.data['round_started'] = self.clock()
+        b['shield']=0
 
     def handle_event(self, event):
         e = NormalizedEvent.model_validate(event).model_dump()
@@ -130,6 +145,8 @@ class Engine:
             if e['type'] == 'follow' and not self.store.claim_follower(sid,e['source'],e['user_id']): return False
             self.data['participants'][e['user_id']] = dict(name=e['name'],avatar=e['avatar'])
             self.data['session']['participants'] = len(self.data['participants'])
+            freq=self.data['participation'].setdefault(e['user_id'],{'name':e['name'],'events':0})
+            freq['events']+=1
             if e['type'] == 'gift':
                 if not any(g['gift_id'] == e['gift_id'] for g in self.data['known_gifts']):
                     self.data['known_gifts'].append(dict(gift_id=e['gift_id'],name=e['gift_name'] or e['gift_id']))
@@ -139,7 +156,8 @@ class Engine:
                 self.data['session']['gifts'] += delta
                 rule = next((g for g in self.data['settings']['gift_rules'] if g['gift_id'] == e['gift_id']),None)
                 self._log(f"Enviou {delta} × {e['gift_name'] or (rule['name'] if rule else e['gift_id'])}", 'gift', e['source'],e['name'],avatar=e['avatar'])
-                if rule and rule['enabled']:
+                if rule and rule['enabled'] and self._cooldown('gift:'+e['gift_id']+':'+e['user_id'],rule['cooldown_seconds']):
+                    self._log(rule['message'].replace('{name}',e['name']),source=e['source'],name=e['name'])
                     self._action(dict(type='damage',amount=round(rule['damage']*rule['multiplier']*delta),enabled=True,animation=rule['animation'],sound=rule['sound']),e)
                 elif not rule: self._log('Presente detectado sem regra: configure seu ID no painel.',source=e['source'],name=e['name'])
             elif e['type'] == 'follow':
@@ -153,13 +171,35 @@ class Engine:
             elif e['type'] == 'like':
                 self.data['session']['likes'] += e['like_count']
                 self._log(f"Enviou {e['like_count']} curtidas",'like',e['source'],e['name'])
+                self.data['battle']['like_power']+=e['like_count']
+                while self.data['battle']['like_power']>=self.data['settings']['likes_goal']:
+                    self.data['battle']['like_power']-=self.data['settings']['likes_goal']
+                    self.data['battle']['power_charges']=min(5,self.data['battle']['power_charges']+1)
+                    self._log('Curtidas carregaram um ataque coletivo! !poder pode usar uma carga extra.','goal',e['source'],'Equipe')
+                    self._action(dict(enabled=True,type='damage',amount=self.data['settings']['likes_reward_damage'],animation='burst',sound='power'),{**e,'user_id':'collective','name':'Equipe'})
                 self._action(dict(enabled=True,type='damage',amount=e['like_count']*self.data['settings']['like_damage'],animation='spark',sound='hit'),e)
             elif e['type'] == 'comment':
                 self.data['session']['comments'] += 1
                 self._log(e['text'],'comment',e['source'],e['name'])
-                if e['text'].lower().strip() in ('!atacar','!attack'):
-                    self._action(dict(enabled=True,type='damage',amount=self.data['settings']['comment_damage'],animation='slash',sound='hit'),e)
+                command=e['text'].lower().strip()
+                if command in ('!atacar','!attack','!curar','!defender','!poder') and self._cooldown('comment:'+e['user_id'],self.data['settings']['comment_cooldown']):
+                    if command=='!curar':
+                        self._action(dict(enabled=True,type='heal',amount=self.data['settings']['heal_amount'],animation='heal',sound='heal'),e)
+                    elif command=='!defender':
+                        self._action(dict(enabled=True,type='defend',amount=self.data['settings']['defense_seconds'],animation='power',sound='power'),e)
+                    elif command=='!poder':
+                        if self.data['battle']['power_charges']>0:
+                            self.data['battle']['power_charges']-=1
+                            self._action(dict(enabled=True,type='damage',amount=self.data['settings']['likes_reward_damage'],animation='legendary',sound='power'),e)
+                        else:self._log('Sem carga. A equipe pode carregar poder com curtidas gratuitas.',source=e['source'],name=e['name'])
+                    else:self._action(dict(enabled=True,type='damage',amount=self.data['settings']['comment_damage'],animation='slash',sound='hit'),e)
             return True
+
+    def _cooldown(self,key,seconds):
+        now=self.clock()
+        if self.data['cooldowns'].get(key,0)>now:return False
+        self.data['cooldowns'][key]=now+seconds
+        return True
 
     def _action(self, action, user):
         if not action['enabled'] or action['amount'] <= 0: return
@@ -168,7 +208,13 @@ class Engine:
             self.data['pending'].append(dict(action=copy.deepcopy(action),user=copy.deepcopy(user)))
             return
         b = self.data['battle']; now = self.clock()
-        if action['type'] == 'power':
+        if action['type']=='defend':
+            b['defense_until']=now+action['amount']
+            self._log('Defesa ativa: ataques do chefe causam metade do dano durante a duração indicada.','power',user['source'],user['name'],sound='power',animation='power')
+        elif action['type']=='scene':
+            b['scene_bonus']=True
+            self._log('Novo cenário desbloqueado pela comunidade!','scene',user['source'],user['name'],animation='burst',sound='victory')
+        elif action['type'] == 'power':
             b['power_until'] = min(now+120, max(now,b['power_until'])+action['amount'])
             self._log('Poder coletivo: dano em dobro!', 'power',user['source'],user['name'],sound=action['sound'],animation=action['animation'],amount=action['amount'])
         elif action['type'] == 'heal':
@@ -176,8 +222,9 @@ class Engine:
             b['team_hp'] += healed
             self._log('Recuperou a vida da equipe.', 'heal',user['source'],user['name'],amount=healed,sound=action['sound'],animation=action['animation'])
         else:
-            damage = min(b['boss']['hp'],action['amount']*(2 if b['power_until']>now else 1))
-            b['boss']['hp'] -= damage; b['total_damage'] += damage; self.data['round_damage'] += damage
+            damage = min(b['boss']['hp']+b['shield'],action['amount']*(2 if b['power_until']>now else 1))
+            blocked=min(b['shield'],damage);b['shield']-=blocked
+            b['boss']['hp'] -= damage-blocked; b['total_damage'] += damage; self.data['round_damage'] += damage
             b['combo'] = min(999,b['combo']+1) if now-self.data['last_combo'] <= 5 else 1
             self.data['last_combo'] = now
             rank = self.data['ranking'].setdefault(user['user_id'],dict(user_id=user['user_id'],name=user['name'],avatar=user.get('avatar'),damage=0))
@@ -186,7 +233,7 @@ class Engine:
             if b['boss']['hp'] <= 0:
                 b['status'] = 'victory'; b['bosses_defeated'] += 1
                 self.data['next_at'] = now+self.data['settings']['transition_seconds']
-                self.store.add_history(dict(level=b['level'],boss=b['boss']['name'],damage=self.data['round_damage'],result='victory',timestamp=now,mode=self.mode))
+                self.store.add_history(dict(level=b['level'],boss=b['boss']['name'],damage=self.data['round_damage'],result='victory',timestamp=now,mode=self.mode,duration_seconds=max(0,now-self.data['round_started'])))
                 self._log('Chefe derrotado! A próxima fase está chegando.', 'victory',sound='victory',animation='burst')
 
     def _drain(self):
@@ -200,23 +247,36 @@ class Engine:
             with self._transaction(): self._next_level(); self._drain()
         elif b['status'] == 'running':
             attack = now-self.data['last_attack']>=self.data['settings']['boss_attack_interval']
-            special = now>=self.data['next_special']
+            special = self.data['settings']['dynamic_events'] and now>=self.data['next_special']
             combo_ended = b['combo']>0 and now-self.data['last_combo']>5
+            defense_expired=b['defense_until']>0 and now>=b['defense_until']
             power_expired = b['power_until']>0 and now>=b['power_until']
-            if not (attack or special or combo_ended or power_expired): return
+            if not (attack or special or combo_ended or power_expired or defense_expired): return
             with self._transaction():
                 if combo_ended: b['combo']=0
                 if power_expired: b['power_until']=0
+                if defense_expired:b['defense_until']=0
                 if attack:
                     self.data['last_attack']=now
-                    b['team_hp']=max(0,b['team_hp']-self.data['settings']['boss_attack_damage'])
-                    self._log('O chefe atacou a equipe.', 'boss_attack',amount=self.data['settings']['boss_attack_damage'])
+                    raw=self.data['settings']['boss_attack_damage']
+                    if b['boss']['kind']=='dragon' and b['boss']['hp']<b['boss']['max_hp']/2:raw=round(raw*1.5)
+                    if b['boss']['kind']=='specter':raw=max(1,round(raw*.75)) if raw else 0
+                    dealt=round(raw*.5) if b['defense_until']>now else raw
+                    b['team_hp']=max(0,b['team_hp']-dealt)
+                    self._log('O chefe atacou a equipe.', 'boss_attack',amount=dealt)
                     if b['team_hp']<=0:
                         b['status']='defeat'
-                        self.store.add_history(dict(level=b['level'],boss=b['boss']['name'],damage=self.data['round_damage'],result='defeat',timestamp=now,mode=self.mode))
+                        self.store.add_history(dict(level=b['level'],boss=b['boss']['name'],damage=self.data['round_damage'],result='defeat',timestamp=now,mode=self.mode,duration_seconds=max(0,now-self.data['round_started'])))
                         self._log('Equipe derrotada. Inicie novamente para tentar outra vez.', 'defeat',sound='critical')
                 if special and b['status']=='running':
                     # A deterministic seed from the session gives reproducible, varied events.
                     choice = (uuid.UUID(self.data['session']['id']).int + int(now//30))%2
-                    self.data['next_special']=now+30
+                    self.data['next_special']=now+self.data['settings']['special_interval']
+                    if b['boss']['kind']=='golem':
+                        b['shield']=min(100,b['shield']+50)
+                        self._log('Escudo mágico: 50 pontos. Qualquer ataque, inclusive gratuito, quebra a proteção.','system')
+                    elif b['boss']['kind']=='dragon':
+                        self._log('Fúria: abaixo de metade da vida, o dragão causa 50% mais dano. !defender reduz o impacto.','system')
+                    else:
+                        self._log('Fase bônus gratuita: a equipe recebeu cura ou poder.','system')
                     self._action(dict(enabled=True,type='power' if choice else 'heal',amount=8 if choice else 12,animation='power',sound='power'),dict(source='system',name='Evento especial',user_id='collective'))

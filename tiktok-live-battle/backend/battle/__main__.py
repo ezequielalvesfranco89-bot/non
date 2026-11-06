@@ -9,7 +9,7 @@ from .api import create_app
 def main():
     parser = argparse.ArgumentParser(description='TikTok Live Battle — servidor local')
     parser.add_argument('--host', default='127.0.0.1', choices=['127.0.0.1', 'localhost', '::1'], help='Acesso local somente')
-    parser.add_argument('--port', type=int, default=8765)
+    parser.add_argument('--port', type=int, default=8766)
     parser.add_argument('--data-dir', type=Path, default=None)
     parser.add_argument('--config', type=Path, default=None, help='Importar JSON de configurações explicitamente na inicialização')
     args = parser.parse_args()

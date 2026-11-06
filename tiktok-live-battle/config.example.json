@@ -12,6 +12,13 @@
     "specter": "Espectro do Eclipse",
     "dragon": "Dragão da Tempestade"
   },
+  "comment_cooldown": 3.0,
+  "heal_amount": 12,
+  "defense_seconds": 8,
+  "likes_goal": 100,
+  "likes_reward_damage": 300,
+  "special_interval": 30.0,
+  "dynamic_events": true,
   "like_damage": 1,
   "comment_damage": 15,
   "gift_rules": [
@@ -22,6 +29,8 @@
       "multiplier": 1.0,
       "animation": "slash",
       "sound": "hit",
+      "cooldown_seconds": 0.0,
+      "message": "{name} fortaleceu a equipe!",
       "enabled": true
     },
     {
@@ -31,6 +40,8 @@
       "multiplier": 1.0,
       "animation": "burst",
       "sound": "hit",
+      "cooldown_seconds": 0.0,
+      "message": "{name} fortaleceu a equipe!",
       "enabled": true
     },
     {
@@ -40,6 +51,8 @@
       "multiplier": 2.0,
       "animation": "critical",
       "sound": "critical",
+      "cooldown_seconds": 0.0,
+      "message": "{name} fortaleceu a equipe!",
       "enabled": true
     },
     {
@@ -49,6 +62,8 @@
       "multiplier": 1.0,
       "animation": "legendary",
       "sound": "legendary",
+      "cooldown_seconds": 0.0,
+      "message": "{name} fortaleceu a equipe!",
       "enabled": true
     }
   ],
@@ -83,14 +98,14 @@
       }
     },
     {
-      "id": "goal-25",
-      "target": 25,
+      "id": "goal-20",
+      "target": 20,
       "action": {
         "enabled": true,
-        "type": "power",
-        "amount": 30,
-        "animation": "power",
-        "sound": "power"
+        "type": "scene",
+        "amount": 1,
+        "animation": "burst",
+        "sound": "victory"
       }
     }
   ]

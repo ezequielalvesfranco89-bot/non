@@ -1,30 +1,27 @@
-# Validação da entrega
+# Validação da primeira versão 2.0
 
-Ambiente executado: Linux, Python 3.12, Node 24, Chromium com WebGL por software.
+## Executado
 
-- 46 testes automatizados Python aprovados. Resultado em `testes-python.txt`.
-- Compilação TypeScript (`tsc --noEmit`) e build de produção Vite aprovados.
-- Testes funcionais no navegador: canvas Pixi ativo, dano de presente, seguidores
-  individuais, boas-vindas, repetição sem recompensa extra e metas coletivas.
-- Edição e persistência de ações de seguidores e regras de presentes após recarregar.
-- Personalização do nome do chefe e da paleta; vitória e histórico pelo fluxo real.
-- Inicialização de áudio por interação, seguida de eventos sem erro JavaScript.
-- Overlay vertical sem controles administrativos e com transparência real: PNG RGBA,
-  pixel de canto (0,0,0,0), incluindo documento e canvas sem fundo opaco.
-- Layout administrativo sem rolagem horizontal a 320 e 390 px.
-- Nenhum erro de JavaScript ou resposta HTTP com falha nos fluxos de navegador.
-- Teste concorrente de 12 entregas repetidas resultou em um único seguidor/recompensa.
-- O cliente real TikTokLive foi instanciado sem rede, com handlers individuais e
-  verificação CERT_REQUIRED no transporte do signer.
+- Build TypeScript e Vite de produção concluído.
+- Suíte com integração instalada: 54 testes aprovados (testes-python.txt).
+- Instalação Python limpa, sem TikTokLive: 53 aprovados e 1 teste de SDK marcado
+  como não executado (testes-instalacao-limpa.txt). Não se tratou skip como aprovação.
+- Resolução/download no PyPI dos 14 pacotes binários necessários ao núcleo para
+  Windows amd64/Python 3.12, sem compilar extensões nativas ou desativar TLS.
+- Navegador Chromium contra a instalação limpa: canvas Pixi, tutorial HTTP200,
+  ataque grátis, cooldown, defesa, carga por curtidas, !poder, boas-vindas,
+  seguidores repetidos, análise com limitações explícitas e largura320 sem overflow.
+- O mesmo fluxo passou contra o ambiente com o adaptador opcional instalado.
+- Captura da versão atual: preview-v2.png. As demais capturas são referência da 1.0.
 
-## Não validado
+## O que NÃO foi verificado
 
-- Recepção ponta a ponta em TikTok LIVE: não houve @ com live ativa; a política de
-  rede cloud também não inclui os destinos externos necessários. Não se contabilizou
-  nenhum seguidor simulado como evento real.
-- Instalação e execução nativa Windows; arquivo EXE não gerado em Linux. Os scripts
-  e as orientações precisam de validação em Windows antes de distribuição.
-- 60 FPS em hardware do usuário: o ticker tem limite de 60 FPS e limites de partículas,
-  mas isso é uma meta de desempenho, não uma medição garantida em qualquer equipamento.
+- Execução real dos BAT/EXE em Windows: os testes rodaram em Linux. Resolver wheels
+  para Windows não é executar o programa nesse sistema operacional.
+- Recepção de eventos de uma live ativa: não há perfil/live de teste fornecido.
+- Causa específica da janela fechar no computador do usuário: somente o sintoma
+  foi informado. O novo primeiro teste usa cmd /k para manter o erro visível.
+- Ganho de retenção, tempo assistido ou FPS garantido em todo equipamento.
+- Scripts de PyInstaller/EXE no Windows.
 
-As capturas do painel contêm eventos do simulador, explicitamente marcados como TESTE.
+O tutorial separa o teste gratuito local da instalação opcional da integração real.

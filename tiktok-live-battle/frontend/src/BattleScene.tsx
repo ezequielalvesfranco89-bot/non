@@ -4,7 +4,7 @@ import type { State } from './types';
 
 type Particle = { graphic: Graphics; vx: number; vy: number; life: number; maxLife: number; rotation: number };
 type DamageLabel = { text: Text; life: number; maxLife: number; vy: number };
-type Runtime = { app: Application; root: Container; backdrop: Container; boss: Container; aura: Container; ambient: Container; effects: Container; particles: Particle[]; labels: DamageLabel[]; seen: Set<string>; kind: string; level: number; session: string; hp: number; hit: number; time: number; ready: boolean; width: number; height: number; reduced: boolean; observer: ResizeObserver | null };
+type Runtime = { app: Application; root: Container; backdrop: Container; boss: Container; aura: Container; ambient: Container; effects: Container; particles: Particle[]; labels: DamageLabel[]; seen: Set<string>; sceneBonus: boolean; kind: string; level: number; session: string; hp: number; hit: number; time: number; ready: boolean; width: number; height: number; reduced: boolean; observer: ResizeObserver | null };
 const COLORS = { cyan: 0x52ffe0, violet: 0xa769ff, pink: 0xff579a, gold: 0xffd168, ink: 0x0c0a24 };
 const W = 1000;
 const H = 620;
@@ -221,7 +221,7 @@ export default function BattleScene({ state, overlay = false }: { state: State; 
     const ambient = new Container();
     const boss = new Container();
     const effects = new Container();
-    const runtime: Runtime = { app, root, backdrop, boss, aura, ambient, effects, particles: [], labels: [], seen: new Set(), kind: '', level: 0, session: '', hp: stateRef.current.battle.boss.hp, hit: 0, time: 0, ready: false, width: 0, height: 0, reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches, observer: null };
+    const runtime: Runtime = { app, root, backdrop, boss, aura, ambient, effects, particles: [], labels: [], seen: new Set(), sceneBonus: false, kind: '', level: 0, session: '', hp: stateRef.current.battle.boss.hp, hit: 0, time: 0, ready: false, width: 0, height: 0, reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches, observer: null };
     runtimeRef.current = runtime;
     const initialize = async () => {
       try {
@@ -261,7 +261,7 @@ export default function BattleScene({ state, overlay = false }: { state: State; 
         runtime.seen = new Set(initial.events.map((event) => event.id));
         runtime.session = initial.session.id;
         runtime.level = initial.battle.level;
-        drawBackdrop(runtime, initial.battle.level, overlay);
+        runtime.sceneBonus=initial.battle.scene_bonus; drawBackdrop(runtime, initial.battle.level+(runtime.sceneBonus?1:0), overlay);
         drawBoss(runtime, initial.battle.boss.kind);
         runtime.ready = true;
         app.ticker.maxFPS = 60;
@@ -278,10 +278,10 @@ export default function BattleScene({ state, overlay = false }: { state: State; 
             runtime.particles.forEach((particle) => particle.graphic.destroy()); runtime.particles = [];
             runtime.labels.forEach((item) => item.text.destroy()); runtime.labels = [];
           }
-          if (runtime.level !== current.battle.level) {
+          if (runtime.level !== current.battle.level || runtime.sceneBonus !== current.battle.scene_bonus) {
             runtime.level = current.battle.level;
             runtime.hp = current.battle.boss.hp;
-            drawBackdrop(runtime, runtime.level, overlay);
+            runtime.sceneBonus=current.battle.scene_bonus; drawBackdrop(runtime, runtime.level+(runtime.sceneBonus?1:0), overlay);
             if (animated) { spawnBurst(runtime, COLORS.violet, 45, true); floatLabel(runtime, `FASE ${runtime.level}`, COLORS.cyan); }
           }
           if (runtime.kind !== current.battle.boss.kind) drawBoss(runtime, current.battle.boss.kind);

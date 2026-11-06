@@ -29,6 +29,7 @@ class AdapterTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(self.a.normalize('gift',event,9))
     def test_like_uses_batch_count_not_total(self):
         e=self.a.normalize('like',self.event(count=3,total=8888),9);self.assertEqual(e['like_count'],3)
+    @unittest.skipUnless(TikTokAdapter(None,None).capabilities()['available'],'Integração opcional não instalada')
     async def test_actual_library_handlers_and_verified_ssl_transport(self):
         from TikTokLive.events import FollowEvent,GiftEvent
         self.a.username='fixture';self.a.client=self.a._create_client()

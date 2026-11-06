@@ -1,5 +1,7 @@
 # Integração TikTok LIVE
 
+Na versão 2.0, instale a integração separadamente por `instalar-live.bat` ou `backend/requirements-live.txt`. O primeiro teste usa apenas o núcleo do jogo.
+
 Dependência fixada: **TikTokLive 7.0.1**. O modo de teste não acessa TikTok.
 
 ## Evidência de suporte a seguidores

@@ -22,7 +22,7 @@ class Model(BaseModel):
 
 class Action(Model):
     enabled: bool = True
-    type: Literal['damage', 'heal', 'power'] = 'damage'
+    type: Literal['damage', 'heal', 'power', 'scene'] = 'damage'
     amount: int = Field(default=100, ge=1, le=1_000_000)
     animation: Animation = 'spark'
     sound: Sound = 'follow'
@@ -41,6 +41,8 @@ class GiftRule(Model):
     multiplier: float = Field(default=1.0, ge=0.1, le=100)
     animation: Animation = 'slash'
     sound: Sound = 'hit'
+    cooldown_seconds: float = Field(default=0.0,ge=0,le=300)
+    message: str = Field(default='{name} fortaleceu a equipe!',max_length=160)
     enabled: bool = True
 
 
@@ -63,7 +65,7 @@ def default_goals():
     return [
         FollowerGoal(id='goal-5', target=5, action=Action(amount=500, animation='burst', sound='victory')),
         FollowerGoal(id='goal-10', target=10, action=Action(type='heal', amount=50, animation='heal', sound='heal')),
-        FollowerGoal(id='goal-25', target=25, action=Action(type='power', amount=30, animation='power', sound='power')),
+        FollowerGoal(id='goal-20', target=20, action=Action(type='scene', amount=1, animation='burst', sound='victory')),
     ]
 
 
@@ -77,6 +79,13 @@ class Settings(Model):
     animations: bool = True
     appearance: Literal['eclipse', 'ember', 'ocean'] = 'eclipse'
     boss_names: dict[str,str] = Field(default_factory=lambda: {'golem':'Guardião de Obsidiana','specter':'Espectro do Eclipse','dragon':'Dragão da Tempestade'})
+    comment_cooldown: float = Field(default=3.0,ge=0,le=60)
+    heal_amount: int = Field(default=12,ge=1,le=100)
+    defense_seconds: int = Field(default=8,ge=1,le=60)
+    likes_goal: int = Field(default=100,ge=10,le=100000)
+    likes_reward_damage: int = Field(default=300,ge=1,le=100000)
+    special_interval: float = Field(default=30.0,ge=10,le=300)
+    dynamic_events: bool = True
     like_damage: int = Field(default=1, ge=0, le=1000)
     comment_damage: int = Field(default=15, ge=0, le=100_000)
     gift_rules: list[GiftRule] = Field(default_factory=default_gifts, max_length=200)

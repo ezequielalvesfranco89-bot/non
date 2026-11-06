@@ -1,11 +1,6 @@
 /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
   from starlette.testclient import TestClient as TestClient  # noqa
-test_actual_library_handlers_and_verified_ssl_transport (test_adapter.AdapterTests.test_actual_library_handlers_and_verified_ssl_transport) ... /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/websockets/legacy/__init__.py:6: DeprecationWarning: websockets.legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions
-  warnings.warn(  # deprecated in 14.0 - 2024-11-09
-/workspace/non/tiktok-live-battle/.venv/lib/python3.12/site-packages/TikTokLive/client/ws/ws_connect.py:6: DeprecationWarning: websockets.exceptions.InvalidStatusCode is deprecated
-  from websockets.exceptions import InvalidStatusCode  # type: ignore[attr-defined]
-Executing <Task finished name='Task-2' coro=<AdapterTests.test_actual_library_handlers_and_verified_ssl_transport() done, defined at /workspace/non/tiktok-live-battle/backend/tests/test_adapter.py:32> result=None created at /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:100> took 2.169 seconds
-ok
+test_actual_library_handlers_and_verified_ssl_transport (test_adapter.AdapterTests.test_actual_library_handlers_and_verified_ssl_transport) ... ok
 test_anonymous_follow_is_not_invented (test_adapter.AdapterTests.test_anonymous_follow_is_not_invented) ... ok
 test_disconnect_does_not_cancel_other_server_tasks (test_adapter.AdapterTests.test_disconnect_does_not_cancel_other_server_tasks) ... ok
 test_follow_is_individual_and_does_not_use_count (test_adapter.AdapterTests.test_follow_is_individual_and_does_not_use_count) ... ok
@@ -51,8 +46,16 @@ test_start_from_victory_does_not_respawn_zero_hp (test_engine.EngineTests.test_s
 test_unknown_id_no_name_matching (test_engine.EngineTests.test_unknown_id_no_name_matching) ... ok
 test_validation_rejects_nan_and_oversize_power (test_engine.EngineTests.test_validation_rejects_nan_and_oversize_power) ... ok
 test_victory_progression_and_history (test_engine.EngineTests.test_victory_progression_and_history) ... ok
+test_analytics_do_not_invent_retention (test_v2.V2Tests.test_analytics_do_not_invent_retention) ... ok
+test_comment_rate_limit_and_expiry (test_v2.V2Tests.test_comment_rate_limit_and_expiry) ... ok
+test_cure_does_not_heal_boss (test_v2.V2Tests.test_cure_does_not_heal_boss) ... ok
+test_defense_reduces_boss_damage (test_v2.V2Tests.test_defense_reduces_boss_damage) ... ok
+test_difficulty_ceiling_supports_free_progress (test_v2.V2Tests.test_difficulty_ceiling_supports_free_progress) ... ok
+test_free_likes_charge_and_power (test_v2.V2Tests.test_free_likes_charge_and_power) ... ok
+test_gift_cooldown_is_configurable (test_v2.V2Tests.test_gift_cooldown_is_configurable) ... ok
+test_scene_action_available_to_goal (test_v2.V2Tests.test_scene_action_available_to_goal) ... ok
 
 ----------------------------------------------------------------------
-Ran 46 tests in 3.137s
+Ran 54 tests in 0.778s
 
 OK

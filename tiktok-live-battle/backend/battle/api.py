@@ -181,7 +181,7 @@ class Runtime:
 
 
 def create_app(data_dir: Path | str | None = None, frontend_dir: Path | str | None = None, config_path: Path | None = None) -> FastAPI:
-    storage_dir = Path(data_dir or os.environ.get('BATTLE_DATA_DIR', ROOT / '.data'))
+    storage_dir = Path(data_dir or os.environ.get('BATTLE_DATA_DIR', ROOT / '.data-v2'))
     web_dir = Path(frontend_dir or ROOT / 'frontend' / 'dist')
 
     @asynccontextmanager
@@ -195,7 +195,7 @@ def create_app(data_dir: Path | str | None = None, frontend_dir: Path | str | No
         finally:
             await runtime.stop()
 
-    app = FastAPI(title='TikTok Live Battle', version='0.1.0', lifespan=lifespan)
+    app = FastAPI(title='TikTok Live Battle', version='2.0.0', lifespan=lifespan)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=['localhost', '127.0.0.1', '[::1]', 'testserver'])
 
     @app.middleware('http')
@@ -229,7 +229,7 @@ def create_app(data_dir: Path | str | None = None, frontend_dir: Path | str | No
     @app.get('/api/health')
     async def health():
         rt = runtime()
-        return {'status': 'ok', 'version': '0.1.0', 'mode': rt.engine.mode, 'queue_depth': rt.queue.qsize(), 'live_capabilities': rt.adapter.capabilities()}
+        return {'status': 'ok', 'app':'tiktok-live-battle', 'version': '2.0.0', 'mode': rt.engine.mode, 'queue_depth': rt.queue.qsize(), 'live_capabilities': rt.adapter.capabilities()}
 
     @app.get('/api/state')
     async def state():
@@ -331,6 +331,7 @@ def create_app(data_dir: Path | str | None = None, frontend_dir: Path | str | No
 
     @app.get('/{path:path}', include_in_schema=False)
     async def frontend(path: str):
+        if path=='tutorial.html' and (web_dir/'tutorial.html').is_file():return FileResponse(web_dir/'tutorial.html')
         if path not in ('', 'overlay'):
             raise HTTPException(404, 'Página não encontrada')
         index = web_dir / 'index.html'
