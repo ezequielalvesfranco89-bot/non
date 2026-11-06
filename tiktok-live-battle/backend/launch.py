@@ -19,15 +19,16 @@ def main():
     logging.basicConfig(level=logging.INFO,handlers=[logging.FileHandler(data/'inicializacao.log',encoding='utf-8'),logging.StreamHandler()],format='%(asctime)s %(levelname)s: %(message)s')
     for port in range(8766,8776):
         current=health(port)
-        if current.get('app')=='tiktok-live-battle' and str(current.get('version','')).startswith('2.'):
+        if current.get('app')=='tiktok-live-battle' and current.get('version')=='2.1.0':
             print('O programa ja esta aberto. Abrindo o painel existente.');webbrowser.open(f'http://127.0.0.1:{port}');return
+        if current.get('app')=='tiktok-live-battle':raise RuntimeError('Feche a janela da versão anterior antes de iniciar esta atualização.')
         with socket.socket() as probe:
             try:probe.bind(('127.0.0.1',port))
             except OSError:continue
         break
     else:raise RuntimeError('Portas 8766 a 8775 ocupadas. Feche instancias anteriores.')
     url=f'http://127.0.0.1:{port}'
-    print('\nTikTok Live Battle 2.0 — MODO DE TESTE\nEndereco: '+url+'\nMantenha esta janela aberta enquanto estiver jogando.\nCtrl+C encerra o programa.\n')
+    print('\nTikTok Live Battle 2.1 — MODO DE TESTE\nEndereco: '+url+'\nMantenha esta janela aberta enquanto estiver jogando.\nCtrl+C encerra o programa.\n')
     def open_when_ready():
         for _ in range(100):
             if health(port).get('app')=='tiktok-live-battle':webbrowser.open(url);return

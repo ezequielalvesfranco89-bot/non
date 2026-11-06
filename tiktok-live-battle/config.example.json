@@ -5,6 +5,13 @@
   "boss_attack_damage": 8,
   "transition_seconds": 3.0,
   "volume": 0.35,
+  "music_enabled": true,
+  "music_volume": 0.22,
+  "music_style": "arcade",
+  "rally_enabled": true,
+  "rally_target": 4,
+  "rally_damage": 180,
+  "telegraph_enabled": true,
   "animations": true,
   "appearance": "eclipse",
   "boss_names": {

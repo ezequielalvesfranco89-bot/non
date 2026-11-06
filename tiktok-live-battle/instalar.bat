@@ -1,10 +1,10 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title Instalar TikTok Live Battle 2.0
+title Instalar TikTok Live Battle 2.1
 if not exist ".logs" mkdir .logs
 echo.
-echo TikTok Live Battle 2.0 - instalacao do MODO TESTE
+echo TikTok Live Battle 2.1 - instalacao do MODO TESTE
 echo Nao e necessario TikTok, OBS ou Node.js para este primeiro teste.
 echo.
 set "BATTLE_PY_CMD=py -3"

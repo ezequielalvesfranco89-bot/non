@@ -36,7 +36,8 @@ class Engine:
 
     def _v2_defaults(self):
         b=self.data['battle']
-        for k,v in dict(like_power=0,power_charges=0,defense_until=0,shield=0,scene_bonus=False).items():b.setdefault(k,v)
+        for k,v in dict(like_power=0,power_charges=0,defense_until=0,shield=0,scene_bonus=False,rally_count=0,rally_complete=False,telegraph_until=0).items():b.setdefault(k,v)
+        self.data.setdefault('rally_users',{})
         self.data.setdefault('cooldowns',{})
         self.data.setdefault('round_started',self.clock())
         self.data.setdefault('participation',{})
@@ -103,13 +104,17 @@ class Engine:
                 if b['status'] == 'defeat':
                     b.update(team_hp=100, boss=self._boss(b['level'], self.data['settings']))
                     self.data['round_damage'] = 0
+                b['telegraph_until']=0
                 b['status'] = 'running'
                 self.data['last_attack'] = self.clock()
                 self._drain()
             elif action == 'pause':
                 if b['status'] not in ('running','victory'): raise ValueError('Não há batalha em andamento para pausar.')
+                b['telegraph_until']=0
                 b['status'] = 'paused'
             elif action == 'reset':
+                self.data['rally_users']={}
+                b.update(rally_count=0,rally_complete=False,telegraph_until=0)
                 # Reset round does not reset event identity, rewards, or session counters.
                 b.update(status='idle', shield=0, defense_until=0, level=1, boss=self._boss(1,self.data['settings']), team_hp=100, combo=0, power_until=0)
                 self.data['pending'] = []
@@ -132,6 +137,8 @@ class Engine:
         self.data['round_damage'] = 0
         self.data['round_started'] = self.clock()
         b['shield']=0
+        b.update(rally_count=0,rally_complete=False,telegraph_until=0)
+        self.data['rally_users']={}
 
     def handle_event(self, event):
         e = NormalizedEvent.model_validate(event).model_dump()
@@ -193,7 +200,20 @@ class Engine:
                             self._action(dict(enabled=True,type='damage',amount=self.data['settings']['likes_reward_damage'],animation='legendary',sound='power'),e)
                         else:self._log('Sem carga. A equipe pode carregar poder com curtidas gratuitas.',source=e['source'],name=e['name'])
                     else:self._action(dict(enabled=True,type='damage',amount=self.data['settings']['comment_damage'],animation='slash',sound='hit'),e)
+            if e['type']!='gift':self._rally(e)
             return True
+
+    def _rally(self,e):
+        b=self.data['battle'];s=self.data['settings']
+        if not s['rally_enabled'] or b['rally_complete'] or b['status'] in ('victory','defeat'):return
+        self.data['rally_users'][e['user_id']]=True
+        b['rally_count']=len(self.data['rally_users'])
+        if b['rally_count']>=s['rally_target']:
+            b['rally_complete']=True
+            self._log('União da equipe! Pessoas diferentes colaboraram sem presentes. Recompensa: golpe coletivo e 12 de cura.','rally',e['source'],'Comunidade',animation='burst',sound='victory')
+            team={**e,'user_id':'collective','name':'Comunidade'}
+            self._action(dict(enabled=True,type='damage',amount=s['rally_damage'],animation='burst',sound='power'),team)
+            self._action(dict(enabled=True,type='heal',amount=12,animation='heal',sound='heal'),team)
 
     def _cooldown(self,key,seconds):
         now=self.clock()
@@ -246,17 +266,22 @@ class Engine:
         if b['status'] == 'victory' and now>=self.data['next_at']:
             with self._transaction(): self._next_level(); self._drain()
         elif b['status'] == 'running':
+            warn=self.data['settings']['telegraph_enabled'] and not b['telegraph_until'] and 0 < self.data['settings']['boss_attack_interval']-(now-self.data['last_attack']) <= min(3,self.data['settings']['boss_attack_interval']/2)
             attack = now-self.data['last_attack']>=self.data['settings']['boss_attack_interval']
             special = self.data['settings']['dynamic_events'] and now>=self.data['next_special']
             combo_ended = b['combo']>0 and now-self.data['last_combo']>5
             defense_expired=b['defense_until']>0 and now>=b['defense_until']
             power_expired = b['power_until']>0 and now>=b['power_until']
-            if not (attack or special or combo_ended or power_expired or defense_expired): return
+            if not (attack or special or combo_ended or power_expired or defense_expired or warn): return
             with self._transaction():
+                if warn:
+                    b['telegraph_until']=self.data['last_attack']+self.data['settings']['boss_attack_interval']
+                    self._log('Ataque do chefe anunciado. !defender reduz o dano; !curar recupera a equipe.','warning',animation='none',sound='none')
                 if combo_ended: b['combo']=0
                 if power_expired: b['power_until']=0
                 if defense_expired:b['defense_until']=0
                 if attack:
+                    b['telegraph_until']=0
                     self.data['last_attack']=now
                     raw=self.data['settings']['boss_attack_damage']
                     if b['boss']['kind']=='dragon' and b['boss']['hp']<b['boss']['max_hp']/2:raw=round(raw*1.5)

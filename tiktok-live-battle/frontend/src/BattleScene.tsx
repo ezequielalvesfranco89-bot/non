@@ -308,6 +308,7 @@ export default function BattleScene({ state, overlay = false }: { state: State; 
             }
             if (event.type === 'heal') { spawnBurst(runtime, COLORS.cyan, 25); floatLabel(runtime, `+${event.amount} VIDA`, COLORS.cyan); }
             if (event.type === 'power') { spawnBurst(runtime, COLORS.violet, 35, true); floatLabel(runtime, 'PODER COLETIVO ×2', COLORS.violet); }
+            if (event.type === 'rally') { spawnBurst(runtime, COLORS.cyan, 30); floatLabel(runtime, 'UNIÃO DA EQUIPE!', COLORS.cyan); }
             if (event.type === 'goal') { spawnBurst(runtime, COLORS.gold, 35, true); floatLabel(runtime, 'META ALCANÇADA!', COLORS.gold); }
             if (event.type === 'victory') { spawnBurst(runtime, COLORS.cyan, 60, true); floatLabel(runtime, 'CHEFE DERROTADO!', COLORS.gold); }
             if (event.type === 'defeat') floatLabel(runtime, 'EQUIPE DERROTADA', COLORS.pink);

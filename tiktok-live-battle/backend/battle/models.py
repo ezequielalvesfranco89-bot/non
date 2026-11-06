@@ -76,6 +76,13 @@ class Settings(Model):
     boss_attack_damage: int = Field(default=8, ge=0, le=100)
     transition_seconds: float = Field(default=3.0, ge=0, le=30)
     volume: float = Field(default=0.35, ge=0, le=1)
+    music_enabled: bool = True
+    music_volume: float = Field(default=0.22,ge=0,le=1)
+    music_style: Literal['arcade','ambient'] = 'arcade'
+    rally_enabled: bool = True
+    rally_target: int = Field(default=4,ge=2,le=30)
+    rally_damage: int = Field(default=180,ge=0,le=100000)
+    telegraph_enabled: bool = True
     animations: bool = True
     appearance: Literal['eclipse', 'ember', 'ocean'] = 'eclipse'
     boss_names: dict[str,str] = Field(default_factory=lambda: {'golem':'Guardião de Obsidiana','specter':'Espectro do Eclipse','dragon':'Dragão da Tempestade'})

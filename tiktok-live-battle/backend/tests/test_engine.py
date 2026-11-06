@@ -10,6 +10,7 @@ class Clock:
 class EngineTests(unittest.TestCase):
     def setUp(self):
         self.store=Store(':memory:');self.clock=Clock();self.e=Engine(self.store,self.clock);self.e.control('start');self.n=0
+        settings=self.e.snapshot()['settings'];settings['rally_enabled']=False;self.e.update_settings(settings)
     def tearDown(self):self.store.close()
     def event(self,kind='follow',user='alice',**kw):
         self.n+=1

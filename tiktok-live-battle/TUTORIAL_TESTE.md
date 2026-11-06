@@ -5,7 +5,7 @@ Não precisa de TikTok, OBS ou presente pago. Não há um EXE pronto neste pacot
 
 ## 1 — Baixar
 
-1. Na página do GitHub, confira a branch **tiktok-live-battle-2**.
+1. Na página do GitHub, confira a branch **tiktok-live-battle-21**.
 2. Clique no botão **Code** e depois em **Download ZIP**.
 3. Abra a pasta **Downloads** do Windows.
 4. Clique com o botão direito no ZIP e escolha **Extrair Tudo → Extrair**.
@@ -28,7 +28,7 @@ Node não é necessário: a interface já está compilada no download.
 1. Dê dois cliques em **TESTAR-PRIMEIRO.bat**.
 2. O tutorial abrirá e uma janela com mensagens fará a instalação.
 3. Aguarde. A primeira instalação precisa de internet e pode levar alguns minutos.
-4. O navegador deve abrir o jogo. Você deve ver **LIVE BATTLE 2.0**, **Sistema online**
+4. O navegador deve abrir o jogo. Você deve ver **LIVE BATTLE 2.1**, **Sistema online**
    e **Modo teste**.
 5. Deixe a janela com mensagens aberta. Fechá-la encerra o jogo.
 
@@ -90,3 +90,17 @@ O programa não pede senha. A entrega de eventos depende do TikTok e da integra�
 **Limite da validação:** os testes do desenvolvimento rodaram em Linux. Foram
 verificados pacotes de dependências para Windows, mas a execução nativa dos arquivos
 BAT e a conexão com uma live real ainda precisam ser confirmadas no seu computador.
+
+## Novidades da 2.1 — música e atenção
+
+1. Feche a janela do programa antigo antes de abrir a atualização.
+2. Clique **Ativar trilha**. **Ativar som** continua controlando os efeitos.
+3. Em Configurações, ajuste **Volume da trilha** e **Estilo da trilha**; salve.
+4. Simule quatro IDs diferentes curtindo, seguindo ou comentando: a união gera
+   golpe coletivo e cura, uma vez por fase, sem exigir presentes.
+5. Quando surgir o aviso de ataque do chefe, teste **!defender**.
+6. No OBS, abra Interagir e clique no overlay uma vez para permitir áudio.
+   Mantenha apenas uma aba com música.
+
+A trilha pausa com o combate e pode ser desligada. Essas escolhas são hipóteses de
+design, não garantia científica de retenção.

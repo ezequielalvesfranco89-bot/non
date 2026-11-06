@@ -1,11 +1,11 @@
-# TikTok Live Battle 2.0 — primeira versão funcional
+# TikTok Live Battle 2.1 — primeira versão funcional
 
 **Comece pelo [tutorial passo a passo](TUTORIAL_TESTE.md).** Depois de extrair o ZIP, também pode abrir TUTORIAL_TESTE.html. É um guia local com cada
 clique, o resultado esperado e ajuda para os erros mais comuns.
 
 ## Para testar no Windows
 
-1. Baixe o ZIP da branch `tiktok-live-battle-2` no GitHub.
+1. Baixe o ZIP da branch `tiktok-live-battle-21` no GitHub.
 2. Use **Extrair Tudo**; abra a pasta `tiktok-live-battle` que está dentro.
 3. Instale Python 3.11+ (recomendado Python 3.12, com PATH).
 4. Abra **TESTAR-PRIMEIRO.bat**. Aguarde a instalação e o navegador abrir.
@@ -21,7 +21,7 @@ A versão anterior não abriu no computador do usuário; a mensagem exata ainda 
 foi informada. Esta entrega simplifica a instalação e melhora os diagnósticos;
 não afirma que uma causa específica do problema anterior foi identificada.
 
-## Funcionalidades da primeira versão 2.0
+## Funcionalidades da primeira versão 2.1
 
 - Três chefes animados, cenário vertical/horizontal, vida da equipe, vitória,
   derrota, ranking, histórico, sons e partículas limitadas, usando React/TypeScript
@@ -60,7 +60,7 @@ e no overlay. O histórico preserva a origem TESTE/LIVE.
 - `TESTAR-PRIMEIRO.bat`: abre o tutorial, instala e inicia numa sequência.
 - `.logs/`: diagnóstico da instalação, verificação de Python e ambiente virtual.
 - `%LOCALAPPDATA%\TikTokLiveBattle2\inicializacao.log`: problemas de inicialização.
-- `%LOCALAPPDATA%\TikTokLiveBattle2\battle.sqlite3`: dados locais da versão 2.0.
+- `%LOCALAPPDATA%\TikTokLiveBattle2\battle.sqlite3`: dados locais da versão 2.1.
 
 Se houver bloqueio de segurança, não desative antivírus nem TLS: informe a mensagem.
 Os scripts mantêm erros visíveis. Não execute como administrador para tentar resolver
@@ -113,3 +113,19 @@ aleatória. Veja [docs/DESIGN.md](docs/DESIGN.md).
 
 Para gerar um EXE no Windows, use `gerar-executavel.bat` após testar o jogo. É preciso
 validar o resultado em Windows; PyInstaller no Linux não gera um EXE Windows.
+
+## Atualização 2.1: atenção, cooperação e trilha original
+
+- **União da equipe:** quatro pessoas diferentes participando gratuitamente
+  liberam golpe + cura. Contagem e dano configuráveis, uma recompensa por fase.
+- **Aviso antecipado de ataque:** dá uma oportunidade real de usar !defender.
+- **Trilha procedural:** melodia, baixo, acordes e percussão, com variação por chefe
+  e camada de clímax abaixo de 25% da vida. Volume independente; estilo ambiente
+  opcional. Nenhum arquivo musical externo precisa ser baixado.
+- **Prioridade à leitura:** orientações contextuais e música mais baixa durante
+  avisos/boas-vindas. Não há garantia de aumentar retenção; veja docs/DESIGN.md.
+
+Clique **Ativar trilha** para começar. O navegador exige interação. No OBS, use
+Interagir no overlay e clique uma vez, ou capture o áudio da aba do painel. Não deixe
+duas abas tocando ao mesmo tempo. Feche a janela da versão anterior antes de iniciar
+a atualização. O arquivo docs/previa-trilha.webm contém uma pequena gravação de teste.

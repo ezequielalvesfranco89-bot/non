@@ -195,7 +195,7 @@ def create_app(data_dir: Path | str | None = None, frontend_dir: Path | str | No
         finally:
             await runtime.stop()
 
-    app = FastAPI(title='TikTok Live Battle', version='2.0.0', lifespan=lifespan)
+    app = FastAPI(title='TikTok Live Battle', version='2.1.0', lifespan=lifespan)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=['localhost', '127.0.0.1', '[::1]', 'testserver'])
 
     @app.middleware('http')
@@ -229,7 +229,7 @@ def create_app(data_dir: Path | str | None = None, frontend_dir: Path | str | No
     @app.get('/api/health')
     async def health():
         rt = runtime()
-        return {'status': 'ok', 'app':'tiktok-live-battle', 'version': '2.0.0', 'mode': rt.engine.mode, 'queue_depth': rt.queue.qsize(), 'live_capabilities': rt.adapter.capabilities()}
+        return {'status': 'ok', 'app':'tiktok-live-battle', 'version': '2.1.0', 'mode': rt.engine.mode, 'queue_depth': rt.queue.qsize(), 'live_capabilities': rt.adapter.capabilities()}
 
     @app.get('/api/state')
     async def state():

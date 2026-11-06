@@ -1,6 +1,6 @@
-# TikTok Live Battle 2.0 — primeiro teste
+# TikTok Live Battle 2.1 — primeiro teste
 
-1. Clique em **Code → Download ZIP** nesta branch `tiktok-live-battle-2`.
+1. Clique em **Code → Download ZIP** nesta branch `tiktok-live-battle-21`.
 2. No Windows, clique com o botão direito no ZIP e use **Extrair Tudo**.
 3. Abra a pasta extraída e entre em **tiktok-live-battle**.
 4. Abra **TUTORIAL_TESTE.html**: ele explica cada clique e o resultado esperado.

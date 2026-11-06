@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title TikTok Live Battle 2.0 - mantenha esta janela aberta
+title TikTok Live Battle 2.1 - mantenha esta janela aberta
 if not exist ".venv\Scripts\python.exe" goto instalar
 .venv\Scripts\python.exe -c "import fastapi,uvicorn,pydantic" >nul 2>nul
 if not errorlevel 1 goto executar
