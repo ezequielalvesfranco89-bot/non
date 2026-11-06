@@ -1,0 +1,58 @@
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_actual_library_handlers_and_verified_ssl_transport (test_adapter.AdapterTests.test_actual_library_handlers_and_verified_ssl_transport) ... /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/websockets/legacy/__init__.py:6: DeprecationWarning: websockets.legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions
+  warnings.warn(  # deprecated in 14.0 - 2024-11-09
+/workspace/non/tiktok-live-battle/.venv/lib/python3.12/site-packages/TikTokLive/client/ws/ws_connect.py:6: DeprecationWarning: websockets.exceptions.InvalidStatusCode is deprecated
+  from websockets.exceptions import InvalidStatusCode  # type: ignore[attr-defined]
+Executing <Task finished name='Task-2' coro=<AdapterTests.test_actual_library_handlers_and_verified_ssl_transport() done, defined at /workspace/non/tiktok-live-battle/backend/tests/test_adapter.py:32> result=None created at /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:100> took 2.169 seconds
+ok
+test_anonymous_follow_is_not_invented (test_adapter.AdapterTests.test_anonymous_follow_is_not_invented) ... ok
+test_disconnect_does_not_cancel_other_server_tasks (test_adapter.AdapterTests.test_disconnect_does_not_cancel_other_server_tasks) ... ok
+test_follow_is_individual_and_does_not_use_count (test_adapter.AdapterTests.test_follow_is_individual_and_does_not_use_count) ... ok
+test_gift_combo_normalization (test_adapter.AdapterTests.test_gift_combo_normalization) ... ok
+test_invalid_username_rejected_without_connecting (test_adapter.AdapterTests.test_invalid_username_rejected_without_connecting) ... ok
+test_like_uses_batch_count_not_total (test_adapter.AdapterTests.test_like_uses_batch_count_not_total) ... ok
+test_malformed_payload_no_reward (test_adapter.AdapterTests.test_malformed_payload_no_reward) ... ok
+test_no_group_intermediate_streak_ignored (test_adapter.AdapterTests.test_no_group_intermediate_streak_ignored) ... ok
+test_stable_follow_without_msgid (test_adapter.AdapterTests.test_stable_follow_without_msgid) ... ok
+test_config_persisted_after_server_restart (test_api.ApiTests.test_config_persisted_after_server_restart) ... ok
+test_follow_event_parallel_replays_one_reward (test_api.ApiTests.test_follow_event_parallel_replays_one_reward) ... ok
+test_health_and_initial_snapshot (test_api.ApiTests.test_health_and_initial_snapshot) ... ok
+test_modes_guard_and_simulation_forbidden_live (test_api.ApiTests.test_modes_guard_and_simulation_forbidden_live) ... ok
+test_no_mass_inferred_follow_event (test_api.ApiTests.test_no_mass_inferred_follow_event) ... ok
+test_origin_and_dns_rebinding_rejected (test_api.ApiTests.test_origin_and_dns_rebinding_rejected) ... ok
+test_settings_validation_and_export (test_api.ApiTests.test_settings_validation_and_export) ... ok
+test_unknown_control_invalid_limits (test_api.ApiTests.test_unknown_control_invalid_limits) ... ok
+test_websocket_initial_and_updates (test_api.ApiTests.test_websocket_initial_and_updates) ... ok
+test_bounded_paused_queue_rejects_without_reward (test_engine.EngineTests.test_bounded_paused_queue_rejects_without_reward) ... ok
+test_combo_cumulative_positive_deltas_only (test_engine.EngineTests.test_combo_cumulative_positive_deltas_only) ... ok
+test_combos_independent_by_user_gift_group (test_engine.EngineTests.test_combos_independent_by_user_gift_group) ... ok
+test_comments_only_attack_command (test_engine.EngineTests.test_comments_only_attack_command) ... ok
+test_custom_boss_name_and_palette_persist (test_engine.EngineTests.test_custom_boss_name_and_palette_persist) ... ok
+test_defeat_once_and_retry (test_engine.EngineTests.test_defeat_once_and_retry) ... ok
+test_disabled_gift_counted_without_damage (test_engine.EngineTests.test_disabled_gift_counted_without_damage) ... ok
+test_edit_goal_does_not_reaward_same_id (test_engine.EngineTests.test_edit_goal_does_not_reaward_same_id) ... ok
+test_follow_heals_team_but_not_boss (test_engine.EngineTests.test_follow_heals_team_but_not_boss) ... ok
+test_follow_unique_user_and_message (test_engine.EngineTests.test_follow_unique_user_and_message) ... ok
+test_gift_replay_event_exactly_once (test_engine.EngineTests.test_gift_replay_event_exactly_once) ... ok
+test_goals_exactly_once_across_restart (test_engine.EngineTests.test_goals_exactly_once_across_restart) ... ok
+test_incomplete_boss_configuration_rejected (test_engine.EngineTests.test_incomplete_boss_configuration_rejected) ... ok
+test_invalid_event_not_marked_seen (test_engine.EngineTests.test_invalid_event_not_marked_seen) ... ok
+test_like_delta_not_total (test_engine.EngineTests.test_like_delta_not_total) ... ok
+test_log_plain_text_controls_stripped (test_engine.EngineTests.test_log_plain_text_controls_stripped) ... ok
+test_modes_do_not_mix_and_start_new_session (test_engine.EngineTests.test_modes_do_not_mix_and_start_new_session) ... ok
+test_paused_action_survives_restart (test_engine.EngineTests.test_paused_action_survives_restart) ... ok
+test_paused_reward_saved_and_applied_once (test_engine.EngineTests.test_paused_reward_saved_and_applied_once) ... ok
+test_power_doubles_until_expiry (test_engine.EngineTests.test_power_doubles_until_expiry) ... ok
+test_ranking_caps_overkill (test_engine.EngineTests.test_ranking_caps_overkill) ... ok
+test_reset_keeps_follow_reward_identity (test_engine.EngineTests.test_reset_keeps_follow_reward_identity) ... ok
+test_settings_invalid_are_atomic (test_engine.EngineTests.test_settings_invalid_are_atomic) ... ok
+test_start_from_victory_does_not_respawn_zero_hp (test_engine.EngineTests.test_start_from_victory_does_not_respawn_zero_hp) ... ok
+test_unknown_id_no_name_matching (test_engine.EngineTests.test_unknown_id_no_name_matching) ... ok
+test_validation_rejects_nan_and_oversize_power (test_engine.EngineTests.test_validation_rejects_nan_and_oversize_power) ... ok
+test_victory_progression_and_history (test_engine.EngineTests.test_victory_progression_and_history) ... ok
+
+----------------------------------------------------------------------
+Ran 46 tests in 3.137s
+
+OK

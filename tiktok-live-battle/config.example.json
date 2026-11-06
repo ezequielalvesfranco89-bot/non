@@ -1,0 +1,97 @@
+{
+  "monster_hp": 1500,
+  "difficulty_multiplier": 1.18,
+  "boss_attack_interval": 12.0,
+  "boss_attack_damage": 8,
+  "transition_seconds": 3.0,
+  "volume": 0.35,
+  "animations": true,
+  "appearance": "eclipse",
+  "boss_names": {
+    "golem": "Guardião de Obsidiana",
+    "specter": "Espectro do Eclipse",
+    "dragon": "Dragão da Tempestade"
+  },
+  "like_damage": 1,
+  "comment_damage": 15,
+  "gift_rules": [
+    {
+      "gift_id": "demo-rose",
+      "name": "Rosa (teste)",
+      "damage": 35,
+      "multiplier": 1.0,
+      "animation": "slash",
+      "sound": "hit",
+      "enabled": true
+    },
+    {
+      "gift_id": "demo-strong",
+      "name": "Ataque forte (teste)",
+      "damage": 140,
+      "multiplier": 1.0,
+      "animation": "burst",
+      "sound": "hit",
+      "enabled": true
+    },
+    {
+      "gift_id": "demo-critical",
+      "name": "Crítico (teste)",
+      "damage": 250,
+      "multiplier": 2.0,
+      "animation": "critical",
+      "sound": "critical",
+      "enabled": true
+    },
+    {
+      "gift_id": "demo-legendary",
+      "name": "Leão lendário (teste)",
+      "damage": 1000,
+      "multiplier": 1.0,
+      "animation": "legendary",
+      "sound": "legendary",
+      "enabled": true
+    }
+  ],
+  "follow_action": {
+    "enabled": true,
+    "type": "damage",
+    "amount": 100,
+    "animation": "spark",
+    "sound": "follow"
+  },
+  "follower_goals": [
+    {
+      "id": "goal-5",
+      "target": 5,
+      "action": {
+        "enabled": true,
+        "type": "damage",
+        "amount": 500,
+        "animation": "burst",
+        "sound": "victory"
+      }
+    },
+    {
+      "id": "goal-10",
+      "target": 10,
+      "action": {
+        "enabled": true,
+        "type": "heal",
+        "amount": 50,
+        "animation": "heal",
+        "sound": "heal"
+      }
+    },
+    {
+      "id": "goal-25",
+      "target": 25,
+      "action": {
+        "enabled": true,
+        "type": "power",
+        "amount": 30,
+        "animation": "power",
+        "sound": "power"
+      }
+    }
+  ]
+}
