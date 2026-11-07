@@ -4,6 +4,8 @@ Um estúdio de interações em português: presentes e seguidores simulados muda
 
 ![Painel do Live Studio](docs/capturas/desktop.png)
 
+O `index.html` da pasta principal também abre este mesmo estúdio. Para a prévia pelo terminal, execute `npm start` na raiz e abra http://localhost:3000.
+
 ## Começar sem instalar nada
 
 1. Baixe o projeto como ZIP e escolha **Extrair tudo**. Não abra os arquivos dentro do ZIP.

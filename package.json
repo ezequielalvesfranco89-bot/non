@@ -1,0 +1,12 @@
+{
+  "name": "live-studio-preview",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/preview.mjs",
+    "dev": "node scripts/preview.mjs",
+    "build": "npm --prefix live-studio run build",
+    "start:obs": "npm --prefix live-studio start"
+  }
+}

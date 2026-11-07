@@ -37,3 +37,9 @@ O teste cria seu próprio servidor temporário em 127.0.0.1:8784, sem usar o arq
 A política do Chromium gerenciado bloqueia URLs `file://`. Por isso, o teste do arquivo portátil usou o conteúdo exato de TESTAR.html entregue como resposta HTTP local pelo Playwright e API ausente (404); não contornou a política. A abertura por duplo clique e o lançador BAT não foram executados em Windows nativo. O HTML usa script clássico IIFE e todos os recursos estão embutidos, sem módulos ou carregamento de arquivos locais separados.
 
 Não houve teste de conexão com conta de TikTok, YouTube ou Twitch: nenhum adaptador real foi implementado. O OBS não foi executado; sua página de captura foi testada no Chromium com sincronização e transparência. Emojis e sons podem variar conforme navegador/sistema. Os sons são sintetizados; não são gravações realistas de animais ou trilhas musicais.
+
+## Correção da entrada principal
+
+A entrada raiz ainda continha o catálogo Maxon. Foi substituída pelo HTML portátil do Live Studio, e a compilação passou a atualizar esse arquivo automaticamente. A raiz agora inclui `npm start` / `npm run dev`, sem dependências, para abrir a mesma experiência na porta 3000.
+
+`npm --prefix live-studio run test:entry` passou no Chromium: URL principal identifica Live Studio, Rosa cria flor, seguidor amplia plataforma para 395 pixels, biblioteca mostra 60 ações, tutorial abre e arquivos internos não são expostos pelo servidor de prévia. Este teste usa servidor temporário na porta 8786. Ele verifica a entrada efetivamente aberta pelo visitante.

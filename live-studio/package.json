@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build && node scripts/standalone.mjs && tsc -p tsconfig.server.json",
     "test": "node --import tsx tests/run.ts",
     "start": "node build/server/index.js",
-    "test:browser": "node tests/browser.cjs"
+    "test:browser": "node tests/browser.cjs",
+    "test:entry": "node tests/entry.cjs"
   },
   "dependencies": {
     "matter-js": "0.20.0",
