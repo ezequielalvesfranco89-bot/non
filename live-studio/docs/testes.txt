@@ -1,0 +1,54 @@
+
+> live-studio@1.0.0 test
+> node --import tsx tests/run.ts
+
+✔ biblioteca tem 60 ações únicas e oito categorias (145.481288ms)
+✔ todas as ações executam pelo motor, sem resultados não finitos (63.348105ms)
+✔ rosa cria flor persistente, não apenas um aviso (1.290318ms)
+✔ bola usa gravidade e colisão com a plataforma (1.604913ms)
+✔ aumento da plataforma altera a superfície física (0.666466ms)
+✔ aumento do personagem altera o corpo de colisão (0.729812ms)
+✔ vento empurra corpos de verdade e pode ser desligado (1.633847ms)
+✔ gravidade muda e expira (1.360975ms)
+✔ caixa abre e libera corpos (1.856463ms)
+✔ sequência de seguidores alterna ações e impede recompensa repetida (1.680537ms)
+✔ seleção aleatória escolhe um dos passos configurados (1.38457ms)
+✔ uma regra combina várias consequências (0.984076ms)
+✔ combo conta apenas deltas positivos, inclusive na confirmação final (0.888ms)
+✔ mesmo ID de evento não conta duas vezes (2.083015ms)
+✔ meta de seguidores executa exatamente uma vez por sessão (0.974871ms)
+✔ evento especial passa à frente dos normais ainda na fila (0.711714ms)
+✔ atraso de um passo não bloqueia outras ações prontas (0.885497ms)
+✔ pausa congela física, cronômetro e fila (1.423128ms)
+✔ limites de objetos e efeitos sempre são respeitados (1.992097ms)
+✔ terremoto desloca a plataforma e move o personagem (1.728089ms)
+✔ fila cheia recusa antes de contar e permite repetir após liberar (1.759225ms)
+✔ falha de configuração preserva a anterior (0.486144ms)
+✔ pontuação nunca fica negativa e preserva o nome (0.54927ms)
+✔ queda causa derrota real (2.165189ms)
+✔ equilíbrio possui objetivo e recompensa verificáveis (1.117056ms)
+✔ estrelas são coletadas por colisão com o personagem (5.506452ms)
+✔ sons são identificados por ação e podem ser silenciados (1.40486ms)
+✔ regra com nome não substitui o ID do presente (0.533606ms)
+✔ nova sessão reinicia proteção; reiniciar cena preserva (0.778335ms)
+✔ não aceita evento real inventado nem valores não finitos (0.542659ms)
+✔ identificadores reservados não afetam os registros (0.385843ms)
+✔ chaves de combo com separadores não colidem (0.451943ms)
+✔ som pode ser escolhido sem alterar a consequência visual (0.638965ms)
+✔ alterar volume mantém a próxima ação da sequência (1.605254ms)
+✔ API e interface local respondem (15.874119ms)
+✔ plataformas não fingem integração ativa (2.049304ms)
+✔ API aplica evento, física e duplicatas uma vez (295.473335ms)
+✔ WebSocket envia cena autoritativa e somente leitura (7.150475ms)
+✔ configurações são persistidas atomicamente (7.683919ms)
+✔ origem externa e host estranho são recusados (7.080558ms)
+✔ rota externa inventada e caminho de arquivo não são aceitos (1.743522ms)
+✔ eventos reais enviados ao simulador são recusados (1.283037ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 719.369082

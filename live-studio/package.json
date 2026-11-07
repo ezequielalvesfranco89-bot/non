@@ -1,0 +1,33 @@
+{
+  "name": "live-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build && node scripts/standalone.mjs && tsc -p tsconfig.server.json",
+    "test": "node --import tsx tests/run.ts",
+    "start": "node build/server/index.js",
+    "test:browser": "node tests/browser.cjs"
+  },
+  "dependencies": {
+    "matter-js": "0.20.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "ws": "8.18.3"
+  },
+  "devDependencies": {
+    "@types/matter-js": "0.20.2",
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/ws": "8.18.1",
+    "playwright": "^1.62.1",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vite": "8.3.6"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

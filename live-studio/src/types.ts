@@ -1,0 +1,16 @@
+export type EventKind='gift'|'follow'|'like'|'comment'|'custom';
+export type Trigger=EventKind|'goal';
+export type Selection='all'|'sequence'|'random';
+export type Category='Natureza'|'Objetos'|'Animais'|'Personagem'|'Física'|'Celebrações'|'Cenário'|'Jogo e utilidades';
+export type ActionDef={id:string;name:string;icon:string;category:Category;description:string;defaultValue:number;unit:string;colors:string[]};
+export type ActionStep={id:string;action:string;value:number;message:string;delay:number;sound:boolean;soundId?:string};
+export type Rule={id:string;name:string;enabled:boolean;trigger:Trigger;match:string;target:number;priority:1|2|3;selection:Selection;steps:ActionStep[]};
+export type Gift={id:string;name:string;icon:string};
+export type StudioConfig={version:1;rules:Rule[];gifts:Gift[];settings:{soundVolume:number;animations:boolean;maxObjects:number;maxEffects:number}};
+export type InputEvent={id:string;kind:EventKind;viewerId:string;viewer:string;giftId?:string;comboId?:string;count?:number;text?:string;custom?:string;source:'simulation'};
+export type SceneObject={id:number;x:number;y:number;angle:number;vx:number;vy:number;width:number;height:number;radius:number;kind:string;icon:string;color:string;born:number;ttl:number;physics:boolean};
+export type Effect={id:number;kind:string;icon:string;x:number;y:number;born:number;ttl:number;seed:number;color:string};
+export type Log={id:number;kind:string;viewer:string;message:string;time:number;source:'simulation'|'system'};
+export type SoundEvent={id:number;action:string;time:number};
+export type State={session:string;time:number;paused:boolean;theme:string;objects:SceneObject[];effects:Effect[];character:{x:number;y:number;angle:number;radius:number;hat:string;cape:boolean};platform:{x:number;y:number;width:number;height:number};game:{status:'ready'|'playing'|'won'|'lost';name:string;remaining:number;score:number;target:number};timer:number|null;wind:number;gravity:number;message:{text:string;viewer:string;until:number}|null;queue:{id:number;viewer:string;label:string;priority:number;remaining:number}[];history:Log[];sounds:SoundEvent[];ranking:{id:string;name:string;score:number}[];counts:{followers:number;gifts:Record<string,number>;likes:number;comments:number;custom:number;participants:number;accepted:number;duplicates:number};goals:{id:string;name:string;target:number;reached:boolean}[];executions:number;config:StudioConfig;notice:string};
+export type Command={type:'event';event:InputEvent}|{type:'preview';step:ActionStep}|{type:'config';config:StudioConfig}|{type:'control';action:'pause'|'resume'|'scene'|'session'|'left'|'right'|'jump'|'clear_queue'};

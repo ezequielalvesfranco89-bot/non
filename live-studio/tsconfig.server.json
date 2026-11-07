@@ -1,0 +1,1 @@
+{"compilerOptions":{"target":"ES2022","lib":["ES2022","DOM"],"module":"NodeNext","moduleResolution":"NodeNext","outDir":"build","rootDir":".","strict":true,"skipLibCheck":true,"esModuleInterop":true,"types":["node"]},"include":["server/**/*.ts","src/engine.ts","src/catalog.ts","src/types.ts"]}
